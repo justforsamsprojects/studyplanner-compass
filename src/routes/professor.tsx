@@ -42,15 +42,15 @@ function ProfessorPage() {
   const [date, setDate] = useState("");
 
   const addDate = () => {
-    if (!date) return toast.error("Escolha uma data.");
+    if (!date) { toast.error("Escolha uma data."); return; }
     setDates([...dates, { id: uid(), kind, label: label.trim() || (kind === "prova" ? "Prova" : "Entrega"), date }]);
     setLabel("");
     setDate("");
   };
 
   const create = () => {
-    if (!name.trim()) return toast.error("Informe o nome da disciplina.");
-    if (dates.length === 0) return toast.error("Adicione ao menos uma data de prova ou entrega.");
+    if (!name.trim()) { toast.error("Informe o nome da disciplina."); return; }
+    if (dates.length === 0) { toast.error("Adicione ao menos uma data de prova ou entrega."); return; }
     const code = generateCode();
     setSubjects([...subjects, { id: uid(), name: name.trim(), code, dates }]);
     setName("");

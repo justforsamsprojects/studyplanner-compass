@@ -102,7 +102,9 @@ export function generatePlan(
   const sessions: StudySession[] = [];
 
   for (let day = 0; day < 7; day++) {
-    const iso = toISO(dates[day]);
+    const dayDate = dates[day];
+    if (!dayDate) continue;
+    const iso = toISO(dayDate);
     if (iso < todayISO) continue; // não planeja dias que já passaram
     const hours = slots.get(day) ?? [];
     let placedToday = 0;

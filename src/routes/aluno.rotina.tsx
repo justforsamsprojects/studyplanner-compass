@@ -53,8 +53,8 @@ function RotinaPage() {
   const add = () => {
     const s = Number(start);
     const e = Number(end);
-    if (!label.trim()) return toast.error("Dê um nome ao bloco.");
-    if (e <= s) return toast.error("O horário final deve ser maior que o inicial.");
+    if (!label.trim()) { toast.error("Dê um nome ao bloco."); return; }
+    if (e <= s) { toast.error("O horário final deve ser maior que o inicial."); return; }
     const block: BusyBlock = { id: uid(), day: Number(day), start: s, end: e, label: label.trim(), type };
     setBlocks([...blocks, block]);
     setLabel("");
