@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AlunoRouteImport } from './routes/aluno'
 import { Route as AlunoIndexRouteImport } from './routes/aluno.index'
+import { Route as AlunoDisciplinasRouteImport } from './routes/aluno.disciplinas'
+import { Route as AlunoRotinaRouteImport } from './routes/aluno.rotina'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,28 +30,50 @@ const AlunoIndexRoute = AlunoIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AlunoRoute,
 } as any)
+const AlunoDisciplinasRoute = AlunoDisciplinasRouteImport.update({
+  id: '/disciplinas',
+  path: '/disciplinas',
+  getParentRoute: () => AlunoRoute,
+} as any)
+const AlunoRotinaRoute = AlunoRotinaRouteImport.update({
+  id: '/rotina',
+  path: '/rotina',
+  getParentRoute: () => AlunoRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/aluno': typeof AlunoRouteWithChildren
+  '/aluno/disciplinas': typeof AlunoDisciplinasRoute
+  '/aluno/rotina': typeof AlunoRotinaRoute
   '/aluno/': typeof AlunoIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/aluno/disciplinas': typeof AlunoDisciplinasRoute
+  '/aluno/rotina': typeof AlunoRotinaRoute
   '/aluno': typeof AlunoIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/aluno': typeof AlunoRouteWithChildren
+  '/aluno/disciplinas': typeof AlunoDisciplinasRoute
+  '/aluno/rotina': typeof AlunoRotinaRoute
   '/aluno/': typeof AlunoIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/aluno' | '/aluno/'
+  fullPaths: '/' | '/aluno' | '/aluno/disciplinas' | '/aluno/rotina' | '/aluno/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/aluno'
-  id: '__root__' | '/' | '/aluno' | '/aluno/'
+  to: '/' | '/aluno/disciplinas' | '/aluno/rotina' | '/aluno'
+  id:
+    | '__root__'
+    | '/'
+    | '/aluno'
+    | '/aluno/disciplinas'
+    | '/aluno/rotina'
+    | '/aluno/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -80,14 +104,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AlunoIndexRouteImport
       parentRoute: typeof AlunoRoute
     }
+    '/aluno/disciplinas': {
+      id: '/aluno/disciplinas'
+      path: '/disciplinas'
+      fullPath: '/aluno/disciplinas'
+      preLoaderRoute: typeof AlunoDisciplinasRouteImport
+      parentRoute: typeof AlunoRoute
+    }
+    '/aluno/rotina': {
+      id: '/aluno/rotina'
+      path: '/rotina'
+      fullPath: '/aluno/rotina'
+      preLoaderRoute: typeof AlunoRotinaRouteImport
+      parentRoute: typeof AlunoRoute
+    }
   }
 }
 
 interface AlunoRouteChildren {
+  AlunoDisciplinasRoute: typeof AlunoDisciplinasRoute
+  AlunoRotinaRoute: typeof AlunoRotinaRoute
   AlunoIndexRoute: typeof AlunoIndexRoute
 }
 
 const AlunoRouteChildren: AlunoRouteChildren = {
+  AlunoDisciplinasRoute: AlunoDisciplinasRoute,
+  AlunoRotinaRoute: AlunoRotinaRoute,
   AlunoIndexRoute: AlunoIndexRoute,
 }
 
