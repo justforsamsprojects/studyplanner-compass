@@ -2,8 +2,15 @@ import { Link } from "@tanstack/react-router";
 import { GraduationCap } from "lucide-react";
 import type { ReactNode } from "react";
 
+type AppPath =
+  | "/aluno/rotina"
+  | "/aluno/disciplinas"
+  | "/aluno/plano"
+  | "/aluno/painel"
+  | "/professor";
+
 interface NavItem {
-  to: string;
+  to: AppPath;
   label: string;
 }
 
