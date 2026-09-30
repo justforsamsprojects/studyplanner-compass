@@ -15,7 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { generateCode, uid, useTeacherSubjects } from "@/lib/storage";
-import { formatDate, type } from "@/lib/planner";
+import { formatDate } from "@/lib/planner";
 import type { TeacherDate, TeacherDateKind } from "@/lib/types";
 
 export const Route = createFileRoute("/professor")({

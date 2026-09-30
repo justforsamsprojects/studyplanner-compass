@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell, alunoNav } from "@/components/AppShell";
@@ -202,8 +202,8 @@ function RotinaPage() {
                   </div>
                 ))}
                 {HOURS.map((hour) => (
-                  <>
-                    <div key={`h-${hour}`} className="pr-2 text-right text-xs text-muted-foreground">
+                  <Fragment key={hour}>
+                    <div className="pr-2 text-right text-xs text-muted-foreground">
                       {hour}h
                     </div>
                     {DAY_SHORT.map((_, dayIndex) => {
@@ -223,7 +223,7 @@ function RotinaPage() {
                         </div>
                       );
                     })}
-                  </>
+                  </Fragment>
                 ))}
               </div>
             </div>
