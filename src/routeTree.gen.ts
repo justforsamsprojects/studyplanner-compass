@@ -10,33 +10,121 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AlunoRouteImport } from './routes/aluno'
+import { Route as ProfessorRouteImport } from './routes/professor'
+import { Route as AlunoIndexRouteImport } from './routes/aluno.index'
+import { Route as AlunoDisciplinasRouteImport } from './routes/aluno.disciplinas'
+import { Route as AlunoPainelRouteImport } from './routes/aluno.painel'
+import { Route as AlunoPlanoRouteImport } from './routes/aluno.plano'
+import { Route as AlunoRotinaRouteImport } from './routes/aluno.rotina'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AlunoRoute = AlunoRouteImport.update({
+  id: '/aluno',
+  path: '/aluno',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfessorRoute = ProfessorRouteImport.update({
+  id: '/professor',
+  path: '/professor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AlunoIndexRoute = AlunoIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AlunoRoute,
+} as any)
+const AlunoDisciplinasRoute = AlunoDisciplinasRouteImport.update({
+  id: '/disciplinas',
+  path: '/disciplinas',
+  getParentRoute: () => AlunoRoute,
+} as any)
+const AlunoPainelRoute = AlunoPainelRouteImport.update({
+  id: '/painel',
+  path: '/painel',
+  getParentRoute: () => AlunoRoute,
+} as any)
+const AlunoPlanoRoute = AlunoPlanoRouteImport.update({
+  id: '/plano',
+  path: '/plano',
+  getParentRoute: () => AlunoRoute,
+} as any)
+const AlunoRotinaRoute = AlunoRotinaRouteImport.update({
+  id: '/rotina',
+  path: '/rotina',
+  getParentRoute: () => AlunoRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/aluno': typeof AlunoRouteWithChildren
+  '/professor': typeof ProfessorRoute
+  '/aluno/disciplinas': typeof AlunoDisciplinasRoute
+  '/aluno/painel': typeof AlunoPainelRoute
+  '/aluno/plano': typeof AlunoPlanoRoute
+  '/aluno/rotina': typeof AlunoRotinaRoute
+  '/aluno/': typeof AlunoIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/professor': typeof ProfessorRoute
+  '/aluno/disciplinas': typeof AlunoDisciplinasRoute
+  '/aluno/painel': typeof AlunoPainelRoute
+  '/aluno/plano': typeof AlunoPlanoRoute
+  '/aluno/rotina': typeof AlunoRotinaRoute
+  '/aluno': typeof AlunoIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/aluno': typeof AlunoRouteWithChildren
+  '/professor': typeof ProfessorRoute
+  '/aluno/disciplinas': typeof AlunoDisciplinasRoute
+  '/aluno/painel': typeof AlunoPainelRoute
+  '/aluno/plano': typeof AlunoPlanoRoute
+  '/aluno/rotina': typeof AlunoRotinaRoute
+  '/aluno/': typeof AlunoIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/aluno'
+    | '/professor'
+    | '/aluno/disciplinas'
+    | '/aluno/painel'
+    | '/aluno/plano'
+    | '/aluno/rotina'
+    | '/aluno/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/professor'
+    | '/aluno/disciplinas'
+    | '/aluno/painel'
+    | '/aluno/plano'
+    | '/aluno/rotina'
+    | '/aluno'
+  id:
+    | '__root__'
+    | '/'
+    | '/aluno'
+    | '/professor'
+    | '/aluno/disciplinas'
+    | '/aluno/painel'
+    | '/aluno/plano'
+    | '/aluno/rotina'
+    | '/aluno/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AlunoRoute: typeof AlunoRouteWithChildren
+  ProfessorRoute: typeof ProfessorRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +136,80 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/aluno': {
+      id: '/aluno'
+      path: '/aluno'
+      fullPath: '/aluno'
+      preLoaderRoute: typeof AlunoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/professor': {
+      id: '/professor'
+      path: '/professor'
+      fullPath: '/professor'
+      preLoaderRoute: typeof ProfessorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/aluno/': {
+      id: '/aluno/'
+      path: '/'
+      fullPath: '/aluno/'
+      preLoaderRoute: typeof AlunoIndexRouteImport
+      parentRoute: typeof AlunoRoute
+    }
+    '/aluno/disciplinas': {
+      id: '/aluno/disciplinas'
+      path: '/disciplinas'
+      fullPath: '/aluno/disciplinas'
+      preLoaderRoute: typeof AlunoDisciplinasRouteImport
+      parentRoute: typeof AlunoRoute
+    }
+    '/aluno/painel': {
+      id: '/aluno/painel'
+      path: '/painel'
+      fullPath: '/aluno/painel'
+      preLoaderRoute: typeof AlunoPainelRouteImport
+      parentRoute: typeof AlunoRoute
+    }
+    '/aluno/plano': {
+      id: '/aluno/plano'
+      path: '/plano'
+      fullPath: '/aluno/plano'
+      preLoaderRoute: typeof AlunoPlanoRouteImport
+      parentRoute: typeof AlunoRoute
+    }
+    '/aluno/rotina': {
+      id: '/aluno/rotina'
+      path: '/rotina'
+      fullPath: '/aluno/rotina'
+      preLoaderRoute: typeof AlunoRotinaRouteImport
+      parentRoute: typeof AlunoRoute
+    }
   }
 }
 
+interface AlunoRouteChildren {
+  AlunoDisciplinasRoute: typeof AlunoDisciplinasRoute
+  AlunoPainelRoute: typeof AlunoPainelRoute
+  AlunoPlanoRoute: typeof AlunoPlanoRoute
+  AlunoRotinaRoute: typeof AlunoRotinaRoute
+  AlunoIndexRoute: typeof AlunoIndexRoute
+}
+
+const AlunoRouteChildren: AlunoRouteChildren = {
+  AlunoDisciplinasRoute: AlunoDisciplinasRoute,
+  AlunoPainelRoute: AlunoPainelRoute,
+  AlunoPlanoRoute: AlunoPlanoRoute,
+  AlunoRotinaRoute: AlunoRotinaRoute,
+  AlunoIndexRoute: AlunoIndexRoute,
+}
+
+const AlunoRouteWithChildren = AlunoRoute._addFileChildren(AlunoRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AlunoRoute: AlunoRouteWithChildren,
+  ProfessorRoute: ProfessorRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
