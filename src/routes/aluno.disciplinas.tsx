@@ -44,8 +44,8 @@ function DisciplinasPage() {
   const [code, setCode] = useState("");
 
   const add = () => {
-    if (!name.trim()) return toast.error("Informe o nome da disciplina.");
-    if (!examDate) return toast.error("Informe a data da prova.");
+    if (!name.trim()) { toast.error("Informe o nome da disciplina."); return; }
+    if (!examDate) { toast.error("Informe a data da prova."); return; }
     const subject: Subject = {
       id: uid(),
       name: name.trim(),
@@ -62,10 +62,10 @@ function DisciplinasPage() {
 
   const importByCode = () => {
     const clean = code.trim().toUpperCase();
-    if (clean.length !== 6) return toast.error("O código tem 6 caracteres.");
+    if (clean.length !== 6) { toast.error("O código tem 6 caracteres."); return; }
     const found = readTeacherSubjects().find((t) => t.code === clean);
-    if (!found) return toast.error("Código não encontrado.");
-    if (subjects.some((s) => s.code === clean)) return toast.error("Disciplina já adicionada.");
+    if (!found) { toast.error("Código não encontrado."); return; }
+    if (subjects.some((s) => s.code === clean)) { toast.error("Disciplina já adicionada."); return; }
     const nextExam =
       found.dates
         .filter((d) => d.kind === "prova")

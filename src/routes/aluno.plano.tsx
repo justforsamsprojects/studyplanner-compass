@@ -32,9 +32,9 @@ function PlanoPage() {
   const hasPlan = sessions.length > 0;
 
   const gerar = () => {
-    if (subjects.length === 0) return toast.error("Cadastre disciplinas antes de gerar o plano.");
+    if (subjects.length === 0) { toast.error("Cadastre disciplinas antes de gerar o plano."); return; }
     const plan = generatePlan(blocks, subjects);
-    if (plan.length === 0) return toast.error("Não há janelas livres suficientes nesta semana.");
+    if (plan.length === 0) { toast.error("Não há janelas livres suficientes nesta semana."); return; }
     setSessions(plan);
     toast.success(`${plan.length} sessões geradas.`);
   };
