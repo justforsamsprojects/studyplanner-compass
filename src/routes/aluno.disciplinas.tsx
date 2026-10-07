@@ -14,9 +14,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { readTeacherSubjects, uid, useSessions, useSubjects } from "@/lib/storage";
+import { readTeacherSubjects, uid, useHelpRequests, useSessions, useSubjects } from "@/lib/storage";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import { DIFFICULTY_LABELS, type Subject } from "@/lib/types";
-import { daysUntil, formatDate, requiredHours } from "@/lib/planner";
+import { daysUntil, formatDate, neededHours, studiedHours, subjectAlerts } from "@/lib/planner";
 
 export const Route = createFileRoute("/aluno/disciplinas")({
   head: () => ({
@@ -79,6 +81,37 @@ function DisciplinasPage() {
     ]);
     setCode("");
     toast.success(`"${found.name}" adicionada.`);
+  };
+
+  const [requests, setRequests] = useHelpRequests();
+  const [helpFor, setHelpFor] = useState<Subject | null>(null);
+  const [helpMsg, setHelpMsg] = useState("");
+
+  const summaryFor = (s: Subject) => ({
+    plannedHours: sessions.filter((x) => x.subjectId === s.id).length,
+    studiedHours: studiedHours(s, sessions),
+    neededHours: neededHours(s),
+    alerts: subjectAlerts(s, sessions).map((a) => a.title),
+  });
+
+  const sendHelp = () => {
+    if (!helpFor?.code) return;
+    if (!helpMsg.trim()) { toast.error("Escreva uma mensagem."); return; }
+    setRequests([
+      ...requests,
+      {
+        id: uid(),
+        subjectCode: helpFor.code,
+        subjectName: helpFor.name,
+        message: helpMsg.trim(),
+        summary: summaryFor(helpFor),
+        status: "enviado",
+        createdAt: new Date().toISOString(),
+      },
+    ]);
+    setHelpFor(null);
+    setHelpMsg("");
+    toast.success("Pedido enviado ao professor.");
   };
 
   const remove = (id: string) => {
@@ -182,10 +215,15 @@ function DisciplinasPage() {
                         <p className="mt-1 text-sm text-muted-foreground">
                           Prova em {formatDate(s.examDate)} ·{" "}
                           {dias >= 0 ? `faltam ${dias} dia(s)` : "prova já passou"} ·{" "}
-                          {DIFFICULTY_LABELS[s.difficulty]} · {s.hoursStudied}h estudadas ·{" "}
-                          {requiredHours(s)}h restantes
+                          {DIFFICULTY_LABELS[s.difficulty]} · {studiedHours(s, sessions)}h estudadas / {neededHours(s)}h necessárias
                         </p>
                       </div>
+                      <div className="flex items-center gap-3">
+                      {s.code ? (
+                        <Button size="sm" variant="secondary" onClick={() => { setHelpFor(s); setHelpMsg(""); }}>
+                          Pedir ajuda
+                        </Button>
+                      ) : null}
                       <button
                         onClick={() => remove(s.id)}
                         aria-label={`Remover ${s.name}`}
@@ -193,6 +231,7 @@ function DisciplinasPage() {
                       >
                         <Trash2 className="size-4" />
                       </button>
+                      </div>
                     </div>
                   );
                 })
@@ -200,6 +239,39 @@ function DisciplinasPage() {
           </CardContent>
         </Card>
       </div>
+
+      <Dialog open={!!helpFor} onOpenChange={(o) => !o && setHelpFor(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Pedir ajuda — {helpFor?.name}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>Mensagem</Label>
+              <Textarea value={helpMsg} onChange={(e) => setHelpMsg(e.target.value)} placeholder="Descreva sua dúvida ou dificuldade" />
+            </div>
+            {helpFor ? (
+              <div className="rounded-lg border border-border p-3 text-sm">
+                <p className="mb-1 font-medium text-foreground">Será compartilhado apenas:</p>
+                {(() => {
+                  const sm = summaryFor(helpFor);
+                  return (
+                    <ul className="space-y-1 text-muted-foreground">
+                      <li>Horas planejadas: {sm.plannedHours}h</li>
+                      <li>Horas estudadas: {sm.studiedHours}h / {sm.neededHours}h</li>
+                      <li>Alertas: {sm.alerts.length ? sm.alerts.join("; ") : "nenhum"}</li>
+                    </ul>
+                  );
+                })()}
+              </div>
+            ) : null}
+          </div>
+          <DialogFooter>
+            <Button variant="secondary" onClick={() => setHelpFor(null)}>Cancelar</Button>
+            <Button onClick={sendHelp}>Enviar</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </AppShell>
   );
 }
