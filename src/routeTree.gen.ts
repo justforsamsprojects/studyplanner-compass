@@ -15,8 +15,10 @@ import { Route as ProfessorRouteImport } from './routes/professor'
 import { Route as AlunoIndexRouteImport } from './routes/aluno.index'
 import { Route as AlunoDisciplinasRouteImport } from './routes/aluno.disciplinas'
 import { Route as AlunoPainelRouteImport } from './routes/aluno.painel'
+import { Route as AlunoPedidosRouteImport } from './routes/aluno.pedidos'
 import { Route as AlunoPlanoRouteImport } from './routes/aluno.plano'
 import { Route as AlunoRotinaRouteImport } from './routes/aluno.rotina'
+import { Route as ProfessorPedidosRouteImport } from './routes/professor_.pedidos'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -48,6 +50,11 @@ const AlunoPainelRoute = AlunoPainelRouteImport.update({
   path: '/painel',
   getParentRoute: () => AlunoRoute,
 } as any)
+const AlunoPedidosRoute = AlunoPedidosRouteImport.update({
+  id: '/pedidos',
+  path: '/pedidos',
+  getParentRoute: () => AlunoRoute,
+} as any)
 const AlunoPlanoRoute = AlunoPlanoRouteImport.update({
   id: '/plano',
   path: '/plano',
@@ -58,6 +65,11 @@ const AlunoRotinaRoute = AlunoRotinaRouteImport.update({
   path: '/rotina',
   getParentRoute: () => AlunoRoute,
 } as any)
+const ProfessorPedidosRoute = ProfessorPedidosRouteImport.update({
+  id: '/professor_/pedidos',
+  path: '/professor/pedidos',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -65,8 +77,10 @@ export interface FileRoutesByFullPath {
   '/professor': typeof ProfessorRoute
   '/aluno/disciplinas': typeof AlunoDisciplinasRoute
   '/aluno/painel': typeof AlunoPainelRoute
+  '/aluno/pedidos': typeof AlunoPedidosRoute
   '/aluno/plano': typeof AlunoPlanoRoute
   '/aluno/rotina': typeof AlunoRotinaRoute
+  '/professor/pedidos': typeof ProfessorPedidosRoute
   '/aluno/': typeof AlunoIndexRoute
 }
 export interface FileRoutesByTo {
@@ -74,8 +88,10 @@ export interface FileRoutesByTo {
   '/professor': typeof ProfessorRoute
   '/aluno/disciplinas': typeof AlunoDisciplinasRoute
   '/aluno/painel': typeof AlunoPainelRoute
+  '/aluno/pedidos': typeof AlunoPedidosRoute
   '/aluno/plano': typeof AlunoPlanoRoute
   '/aluno/rotina': typeof AlunoRotinaRoute
+  '/professor/pedidos': typeof ProfessorPedidosRoute
   '/aluno': typeof AlunoIndexRoute
 }
 export interface FileRoutesById {
@@ -85,8 +101,10 @@ export interface FileRoutesById {
   '/professor': typeof ProfessorRoute
   '/aluno/disciplinas': typeof AlunoDisciplinasRoute
   '/aluno/painel': typeof AlunoPainelRoute
+  '/aluno/pedidos': typeof AlunoPedidosRoute
   '/aluno/plano': typeof AlunoPlanoRoute
   '/aluno/rotina': typeof AlunoRotinaRoute
+  '/professor_/pedidos': typeof ProfessorPedidosRoute
   '/aluno/': typeof AlunoIndexRoute
 }
 export interface FileRouteTypes {
@@ -97,8 +115,10 @@ export interface FileRouteTypes {
     | '/professor'
     | '/aluno/disciplinas'
     | '/aluno/painel'
+    | '/aluno/pedidos'
     | '/aluno/plano'
     | '/aluno/rotina'
+    | '/professor/pedidos'
     | '/aluno/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -106,8 +126,10 @@ export interface FileRouteTypes {
     | '/professor'
     | '/aluno/disciplinas'
     | '/aluno/painel'
+    | '/aluno/pedidos'
     | '/aluno/plano'
     | '/aluno/rotina'
+    | '/professor/pedidos'
     | '/aluno'
   id:
     | '__root__'
@@ -116,8 +138,10 @@ export interface FileRouteTypes {
     | '/professor'
     | '/aluno/disciplinas'
     | '/aluno/painel'
+    | '/aluno/pedidos'
     | '/aluno/plano'
     | '/aluno/rotina'
+    | '/professor_/pedidos'
     | '/aluno/'
   fileRoutesById: FileRoutesById
 }
@@ -125,6 +149,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AlunoRoute: typeof AlunoRouteWithChildren
   ProfessorRoute: typeof ProfessorRoute
+  ProfessorPedidosRoute: typeof ProfessorPedidosRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -171,6 +196,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AlunoPainelRouteImport
       parentRoute: typeof AlunoRoute
     }
+    '/aluno/pedidos': {
+      id: '/aluno/pedidos'
+      path: '/pedidos'
+      fullPath: '/aluno/pedidos'
+      preLoaderRoute: typeof AlunoPedidosRouteImport
+      parentRoute: typeof AlunoRoute
+    }
     '/aluno/plano': {
       id: '/aluno/plano'
       path: '/plano'
@@ -185,12 +217,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AlunoRotinaRouteImport
       parentRoute: typeof AlunoRoute
     }
+    '/professor_/pedidos': {
+      id: '/professor_/pedidos'
+      path: '/professor/pedidos'
+      fullPath: '/professor/pedidos'
+      preLoaderRoute: typeof ProfessorPedidosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 interface AlunoRouteChildren {
   AlunoDisciplinasRoute: typeof AlunoDisciplinasRoute
   AlunoPainelRoute: typeof AlunoPainelRoute
+  AlunoPedidosRoute: typeof AlunoPedidosRoute
   AlunoPlanoRoute: typeof AlunoPlanoRoute
   AlunoRotinaRoute: typeof AlunoRotinaRoute
   AlunoIndexRoute: typeof AlunoIndexRoute
@@ -199,6 +239,7 @@ interface AlunoRouteChildren {
 const AlunoRouteChildren: AlunoRouteChildren = {
   AlunoDisciplinasRoute: AlunoDisciplinasRoute,
   AlunoPainelRoute: AlunoPainelRoute,
+  AlunoPedidosRoute: AlunoPedidosRoute,
   AlunoPlanoRoute: AlunoPlanoRoute,
   AlunoRotinaRoute: AlunoRotinaRoute,
   AlunoIndexRoute: AlunoIndexRoute,
@@ -210,6 +251,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AlunoRoute: AlunoRouteWithChildren,
   ProfessorRoute: ProfessorRoute,
+  ProfessorPedidosRoute: ProfessorPedidosRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
