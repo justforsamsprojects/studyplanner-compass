@@ -7,7 +7,9 @@ type AppPath =
   | "/aluno/disciplinas"
   | "/aluno/plano"
   | "/aluno/painel"
-  | "/professor";
+  | "/aluno/pedidos"
+  | "/professor"
+  | "/professor/pedidos";
 
 interface NavItem {
   to: AppPath;
@@ -71,8 +73,10 @@ export const alunoNav: NavItem[] = [
   { to: "/aluno/disciplinas", label: "Disciplinas" },
   { to: "/aluno/plano", label: "Plano semanal" },
   { to: "/aluno/painel", label: "Painel" },
+  { to: "/aluno/pedidos", label: "Meus pedidos" },
 ];
 
 export const professorNav: NavItem[] = [
   { to: "/professor", label: "Minhas disciplinas" },
+  { to: "/professor/pedidos", label: "Pedidos de ajuda" },
 ];

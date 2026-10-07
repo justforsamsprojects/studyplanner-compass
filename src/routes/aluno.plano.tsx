@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useBlocks, useSessions, useSubjects } from "@/lib/storage";
 import { DAY_NAMES } from "@/lib/types";
-import { formatDate, generatePlan, toISO, weekDates } from "@/lib/planner";
+import { formatDate, generatePlan, isPastSession, toISO, weekDates } from "@/lib/planner";
 
 export const Route = createFileRoute("/aluno/plano")({
   head: () => ({
@@ -33,9 +33,11 @@ function PlanoPage() {
 
   const gerar = () => {
     if (subjects.length === 0) { toast.error("Cadastre disciplinas antes de gerar o plano."); return; }
-    const plan = generatePlan(blocks, subjects);
-    if (plan.length === 0) { toast.error("Não há janelas livres suficientes nesta semana."); return; }
-    setSessions(plan);
+    // preserva concluídas e sessões que já passaram; descarta futuras pendentes
+    const kept = sessions.filter((s) => s.done || isPastSession(s));
+    const plan = generatePlan(blocks, subjects, kept);
+    setSessions([...kept, ...plan]);
+    if (plan.length === 0) { toast.info("Nenhuma nova sessão necessária ou sem janelas livres."); return; }
     toast.success(`${plan.length} sessões geradas.`);
   };
 

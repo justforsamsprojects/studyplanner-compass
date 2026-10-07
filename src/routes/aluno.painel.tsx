@@ -19,7 +19,7 @@ import { AppShell, alunoNav } from "@/components/AppShell";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useBlocks, useSessions, useSubjects } from "@/lib/storage";
 import { DAY_SHORT } from "@/lib/types";
-import { daysUntil, formatDate, freeHoursCount, requiredHours, toISO, weekDates } from "@/lib/planner";
+import { freeHoursCount, neededHours, requiredHours, studiedHours, subjectAlerts, toISO, weekDates } from "@/lib/planner";
 
 export const Route = createFileRoute("/aluno/painel")({
   head: () => ({
@@ -76,7 +76,7 @@ function PainelPage() {
   const livres = freeHoursCount(blocks);
   const alertas: Alerta[] = [];
 
-  const totalNecessario = subjects.reduce((acc, s) => acc + requiredHours(s), 0);
+  const totalNecessario = subjects.reduce((acc, s) => acc + requiredHours(s, sessions), 0);
   if (subjects.length > 0 && totalNecessario > livres) {
     alertas.push({
       level: "alto",
@@ -85,26 +85,7 @@ function PainelPage() {
     });
   }
 
-  subjects.forEach((s) => {
-    const planejadas = sessions.filter((x) => x.subjectId === s.id).length;
-    const concluidas = sessions.filter((x) => x.subjectId === s.id && x.done).length;
-    const dias = daysUntil(s.examDate);
-
-    if (planejadas === 0) {
-      alertas.push({
-        level: "medio",
-        title: `${s.name} sem sessões`,
-        text: "Nenhuma sessão de estudo foi planejada para esta disciplina nesta semana.",
-      });
-    }
-    if (dias >= 0 && dias < 7 && (planejadas === 0 || concluidas / planejadas < 0.5)) {
-      alertas.push({
-        level: "alto",
-        title: `${s.name}: prova em ${dias} dia(s)`,
-        text: `Prova em ${formatDate(s.examDate)} e menos de 50% das horas planejadas foram concluídas.`,
-      });
-    }
-  });
+  subjects.forEach((s) => alertas.push(...subjectAlerts(s, sessions)));
 
   return (
     <AppShell
@@ -198,6 +179,22 @@ function PainelPage() {
                     </PieChart>
                   </ResponsiveContainer>
                 )}
+              </CardContent>
+            </Card>
+
+            <Card className="lg:col-span-2">
+              <CardHeader>
+                <CardTitle className="text-base">Horas estudadas / horas necessárias</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                {subjects.map((s) => (
+                  <div key={s.id} className="flex items-center justify-between rounded-lg border border-border px-3 py-2 text-sm">
+                    <span className="font-medium text-foreground">{s.name}</span>
+                    <span className="text-muted-foreground">
+                      {studiedHours(s, sessions)}h / {neededHours(s)}h
+                    </span>
+                  </div>
+                ))}
               </CardContent>
             </Card>
 
