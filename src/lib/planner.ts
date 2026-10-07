@@ -61,18 +61,57 @@ export function freeHoursCount(blocks: BusyBlock[]) {
   return total;
 }
 
-/** Horas totais necessárias até a prova, proporcionais à dificuldade. */
-export function requiredHours(subject: Subject) {
-  const base = subject.difficulty * 6;
-  return Math.max(0, base - subject.hoursStudied);
+/** Horas totais necessárias para a disciplina (proporcional à dificuldade). */
+export function neededHours(subject: Subject) {
+  return subject.difficulty * 6;
+}
+
+/** Horas estudadas = ponto de partida do cadastro + sessões concluídas (1h cada). */
+export function studiedHours(subject: Subject, sessions: StudySession[] = []) {
+  const done = sessions.filter((s) => s.subjectId === subject.id && s.done).length;
+  return subject.hoursStudied + done;
+}
+
+/** Horas que ainda faltam estudar. */
+export function requiredHours(subject: Subject, sessions: StudySession[] = []) {
+  return Math.max(0, neededHours(subject) - studiedHours(subject, sessions));
 }
 
 /** Horas que deveriam ser estudadas nesta semana. */
-export function weeklyTarget(subject: Subject, from = new Date()) {
+export function weeklyTarget(subject: Subject, sessions: StudySession[] = [], from = new Date()) {
   const remainingDays = daysUntil(subject.examDate, from);
   if (remainingDays < 0) return 0;
   const weeksLeft = Math.max(1, Math.ceil((remainingDays + 1) / 7));
-  return Math.ceil(requiredHours(subject) / weeksLeft);
+  return Math.ceil(requiredHours(subject, sessions) / weeksLeft);
+}
+
+/** Sessão já passou (data anterior a hoje, ou hoje com horário já iniciado). */
+export function isPastSession(s: StudySession, ref = new Date()) {
+  const today = toISO(ref);
+  return s.date < today || (s.date === today && s.hour <= ref.getHours());
+}
+
+/** Alertas individuais de uma disciplina. */
+export function subjectAlerts(subject: Subject, sessions: StudySession[]) {
+  const planejadas = sessions.filter((x) => x.subjectId === subject.id).length;
+  const concluidas = sessions.filter((x) => x.subjectId === subject.id && x.done).length;
+  const dias = daysUntil(subject.examDate);
+  const out: { level: "alto" | "medio"; title: string; text: string }[] = [];
+  if (planejadas === 0) {
+    out.push({
+      level: "medio",
+      title: `${subject.name} sem sessões`,
+      text: "Nenhuma sessão de estudo foi planejada para esta disciplina nesta semana.",
+    });
+  }
+  if (dias >= 0 && dias < 7 && (planejadas === 0 || concluidas / planejadas < 0.5)) {
+    out.push({
+      level: "alto",
+      title: `${subject.name}: prova em ${dias} dia(s)`,
+      text: `Prova em ${formatDate(subject.examDate)} e menos de 50% das horas planejadas foram concluídas.`,
+    });
+  }
+  return out;
 }
 
 interface Candidate {
@@ -81,21 +120,28 @@ interface Candidate {
   priority: number;
 }
 
+/**
+ * Gera sessões novas. `kept` são sessões preservadas (concluídas ou passadas):
+ * ocupam horário e contam no limite diário; as concluídas já descontam horas.
+ */
 export function generatePlan(
   blocks: BusyBlock[],
   subjects: Subject[],
+  kept: StudySession[] = [],
   ref = new Date(),
 ): StudySession[] {
   const dates = weekDates(ref);
   const slots = freeSlots(blocks);
-  const todayISO = toISO(ref);
 
   const candidates: Candidate[] = subjects
-    .map((subject) => ({
-      subject,
-      remaining: weeklyTarget(subject, ref),
-      priority: daysUntil(subject.examDate, ref),
-    }))
+    .map((subject) => {
+      const keptPending = kept.filter((k) => k.subjectId === subject.id && !k.done).length;
+      return {
+        subject,
+        remaining: weeklyTarget(subject, kept, ref) - keptPending,
+        priority: daysUntil(subject.examDate, ref),
+      };
+    })
     .filter((c) => c.remaining > 0 && c.priority >= 0)
     .sort((a, b) => a.priority - b.priority);
 
@@ -105,9 +151,13 @@ export function generatePlan(
     const dayDate = dates[day];
     if (!dayDate) continue;
     const iso = toISO(dayDate);
-    if (iso < todayISO) continue; // não planeja dias que já passaram
-    const hours = slots.get(day) ?? [];
-    let placedToday = 0;
+    const keptToday = kept.filter((k) => k.date === iso);
+    const hours = (slots.get(day) ?? []).filter(
+      (h) =>
+        !keptToday.some((k) => k.hour === h) &&
+        !isPastSession({ id: "", subjectId: "", date: iso, hour: h, done: false }, ref),
+    );
+    let placedToday = keptToday.length;
     const recent: string[] = [];
 
     for (const hour of hours) {
@@ -124,13 +174,7 @@ export function generatePlan(
 
       if (!pick) break;
 
-      sessions.push({
-        id: uid(),
-        subjectId: pick.subject.id,
-        date: iso,
-        hour,
-        done: false,
-      });
+      sessions.push({ id: uid(), subjectId: pick.subject.id, date: iso, hour, done: false });
       pick.remaining -= 1;
       placedToday += 1;
       recent.push(pick.subject.id);

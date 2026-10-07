@@ -72,3 +72,23 @@ export const DIFFICULTY_LABELS: Record<1 | 2 | 3, string> = {
   2: "Média",
   3: "Difícil",
 };
+
+export type HelpStatus = "enviado" | "respondido";
+
+export interface HelpSummary {
+  plannedHours: number;
+  studiedHours: number;
+  neededHours: number;
+  alerts: string[];
+}
+
+export interface HelpRequest {
+  id: string;
+  subjectCode: string;
+  subjectName: string;
+  message: string;
+  summary: HelpSummary;
+  status: HelpStatus;
+  reply?: string;
+  createdAt: string;
+}
