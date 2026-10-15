@@ -19,6 +19,7 @@ import { Route as AlunoPedidosRouteImport } from './routes/aluno.pedidos'
 import { Route as AlunoPlanoRouteImport } from './routes/aluno.plano'
 import { Route as AlunoRotinaRouteImport } from './routes/aluno.rotina'
 import { Route as ProfessorPedidosRouteImport } from './routes/professor_.pedidos'
+import { Route as AlunoCadernoSubjectIdRouteImport } from './routes/aluno.caderno.$subjectId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -70,6 +71,11 @@ const ProfessorPedidosRoute = ProfessorPedidosRouteImport.update({
   path: '/professor/pedidos',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AlunoCadernoSubjectIdRoute = AlunoCadernoSubjectIdRouteImport.update({
+  id: '/caderno/$subjectId',
+  path: '/caderno/$subjectId',
+  getParentRoute: () => AlunoRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -82,6 +88,7 @@ export interface FileRoutesByFullPath {
   '/aluno/rotina': typeof AlunoRotinaRoute
   '/professor/pedidos': typeof ProfessorPedidosRoute
   '/aluno/': typeof AlunoIndexRoute
+  '/aluno/caderno/$subjectId': typeof AlunoCadernoSubjectIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -93,6 +100,7 @@ export interface FileRoutesByTo {
   '/aluno/rotina': typeof AlunoRotinaRoute
   '/professor/pedidos': typeof ProfessorPedidosRoute
   '/aluno': typeof AlunoIndexRoute
+  '/aluno/caderno/$subjectId': typeof AlunoCadernoSubjectIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -106,6 +114,7 @@ export interface FileRoutesById {
   '/aluno/rotina': typeof AlunoRotinaRoute
   '/professor_/pedidos': typeof ProfessorPedidosRoute
   '/aluno/': typeof AlunoIndexRoute
+  '/aluno/caderno/$subjectId': typeof AlunoCadernoSubjectIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -120,6 +129,7 @@ export interface FileRouteTypes {
     | '/aluno/rotina'
     | '/professor/pedidos'
     | '/aluno/'
+    | '/aluno/caderno/$subjectId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -131,6 +141,7 @@ export interface FileRouteTypes {
     | '/aluno/rotina'
     | '/professor/pedidos'
     | '/aluno'
+    | '/aluno/caderno/$subjectId'
   id:
     | '__root__'
     | '/'
@@ -143,6 +154,7 @@ export interface FileRouteTypes {
     | '/aluno/rotina'
     | '/professor_/pedidos'
     | '/aluno/'
+    | '/aluno/caderno/$subjectId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -224,6 +236,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfessorPedidosRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/aluno/caderno/$subjectId': {
+      id: '/aluno/caderno/$subjectId'
+      path: '/caderno/$subjectId'
+      fullPath: '/aluno/caderno/$subjectId'
+      preLoaderRoute: typeof AlunoCadernoSubjectIdRouteImport
+      parentRoute: typeof AlunoRoute
+    }
   }
 }
 
@@ -234,6 +253,7 @@ interface AlunoRouteChildren {
   AlunoPlanoRoute: typeof AlunoPlanoRoute
   AlunoRotinaRoute: typeof AlunoRotinaRoute
   AlunoIndexRoute: typeof AlunoIndexRoute
+  AlunoCadernoSubjectIdRoute: typeof AlunoCadernoSubjectIdRoute
 }
 
 const AlunoRouteChildren: AlunoRouteChildren = {
@@ -243,6 +263,7 @@ const AlunoRouteChildren: AlunoRouteChildren = {
   AlunoPlanoRoute: AlunoPlanoRoute,
   AlunoRotinaRoute: AlunoRotinaRoute,
   AlunoIndexRoute: AlunoIndexRoute,
+  AlunoCadernoSubjectIdRoute: AlunoCadernoSubjectIdRoute,
 }
 
 const AlunoRouteWithChildren = AlunoRoute._addFileChildren(AlunoRouteChildren)
