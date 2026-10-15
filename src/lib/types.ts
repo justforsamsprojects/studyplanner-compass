@@ -92,3 +92,13 @@ export interface HelpRequest {
   reply?: string;
   createdAt: string;
 }
+
+/** Documento do caderno de estudos (privado do aluno). */
+export interface NotebookDoc {
+  id: string;
+  subjectId: string;
+  title: string;
+  /** HTML gerado pelo editor */
+  content: string;
+  updatedAt: string;
+}

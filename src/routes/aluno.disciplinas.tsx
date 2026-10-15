@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
@@ -219,6 +219,9 @@ function DisciplinasPage() {
                         </p>
                       </div>
                       <div className="flex items-center gap-3">
+                      <Button size="sm" variant="secondary" asChild>
+                        <Link to="/aluno/caderno/$subjectId" params={{ subjectId: s.id }}>Abrir caderno</Link>
+                      </Button>
                       {s.code ? (
                         <Button size="sm" variant="secondary" onClick={() => { setHelpFor(s); setHelpMsg(""); }}>
                           Pedir ajuda

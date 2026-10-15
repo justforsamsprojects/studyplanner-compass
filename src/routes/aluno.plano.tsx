@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { Link, createFileRoute } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { AppShell, alunoNav } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
@@ -110,6 +110,14 @@ function PlanoPage() {
                           <span className="text-xs text-muted-foreground">
                             {s.hour}h – {s.hour + 1}h
                           </span>
+                          <Link
+                            to="/aluno/caderno/$subjectId"
+                            params={{ subjectId: s.subjectId }}
+                            onClick={(e) => e.stopPropagation()}
+                            className="mt-1 block text-xs font-medium text-primary hover:underline"
+                          >
+                            Abrir caderno
+                          </Link>
                         </span>
                       </label>
                     ))

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import type { BusyBlock, HelpRequest, Role, StudySession, Subject, TeacherSubject } from "./types";
+import type { BusyBlock, NotebookDoc, HelpRequest, Role, StudySession, Subject, TeacherSubject } from "./types";
 
 /**
  * Camada de dados isolada. Hoje grava no localStorage; para migrar para o
@@ -16,6 +16,7 @@ export const KEYS = {
   sessions: `${PREFIX}sessions`,
   teacherSubjects: `${PREFIX}teacherSubjects`,
   helpRequests: `${PREFIX}helpRequests`,
+  notebookDocs: `${PREFIX}notebookDocs`,
 } as const;
 
 function read<T>(key: string, fallback: T): T {
@@ -84,6 +85,9 @@ export const useSessions = () => usePersisted<StudySession[]>(KEYS.sessions, [])
 export const useTeacherSubjects = () => usePersisted<TeacherSubject[]>(KEYS.teacherSubjects, []);
 
 export const useHelpRequests = () => usePersisted<HelpRequest[]>(KEYS.helpRequests, []);
+
+/** Cadernos: privados do aluno, nunca lidos nas telas do professor. */
+export const useNotebookDocs = () => usePersisted<NotebookDoc[]>(KEYS.notebookDocs, []);
 
 export function readTeacherSubjects() {
   return read<TeacherSubject[]>(KEYS.teacherSubjects, []);
