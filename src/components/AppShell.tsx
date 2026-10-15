@@ -8,6 +8,7 @@ type AppPath =
   | "/aluno/plano"
   | "/aluno/painel"
   | "/aluno/pedidos"
+  | "/aluno/caderno/$subjectId"
   | "/professor"
   | "/professor/pedidos";
 
