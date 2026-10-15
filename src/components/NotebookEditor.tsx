@@ -83,7 +83,7 @@ export function NotebookEditor({ content, onSave }: Props) {
   );
 
   const setLink = () => {
-    const prev = editor.getAttributes("link").href as string | undefined;
+    const prev = editor.getAttributes("link")["href"] as string | undefined;
     const url = window.prompt("URL do link (deixe vazio para remover)", prev ?? "https://");
     if (url === null) return;
     if (!url.trim()) {

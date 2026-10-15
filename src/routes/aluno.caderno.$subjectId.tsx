@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/aluno/caderno/$subjectId")({
   validateSearch: (s: Record<string, unknown>): { doc?: string } =>
-    typeof s.doc === "string" ? { doc: s.doc } : {},
+    typeof s["doc"] === "string" ? { doc: s["doc"] } : {},
   head: () => ({
     meta: [
       { title: "Caderno de estudos — StudyPlanner" },
