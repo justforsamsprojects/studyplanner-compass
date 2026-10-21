@@ -256,6 +256,25 @@ function DisciplinasPage() {
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
+              <Label>Seu nome</Label>
+              <Input
+                value={studentName}
+                onChange={(e) => setStudentName(e.target.value)}
+                placeholder="Ex.: Ana Souza"
+                disabled={anonymous}
+              />
+              <div className="flex flex-col gap-1 text-sm">
+                <label className="flex items-center gap-2">
+                  <input type="radio" checked={!anonymous} onChange={() => setAnonymous(false)} />
+                  Enviar com meu nome
+                </label>
+                <label className="flex items-center gap-2">
+                  <input type="radio" checked={anonymous} onChange={() => setAnonymous(true)} />
+                  Enviar de forma anônima
+                </label>
+              </div>
+            </div>
+            <div className="space-y-2">
               <Label>Mensagem</Label>
               <Textarea value={helpMsg} onChange={(e) => setHelpMsg(e.target.value)} placeholder="Descreva sua dúvida ou dificuldade" />
             </div>
@@ -266,6 +285,9 @@ function DisciplinasPage() {
                   const sm = summaryFor(helpFor);
                   return (
                     <ul className="space-y-1 text-muted-foreground">
+                      <li className="font-medium text-foreground">
+                        Nome: {anonymous ? "não será enviado (Aluno anônimo)" : studentName.trim() || "(informe seu nome)"}
+                      </li>
                       <li>Horas planejadas: {sm.plannedHours}h</li>
                       <li>Horas estudadas: {sm.studiedHours}h / {sm.neededHours}h</li>
                       <li>Alertas: {sm.alerts.length ? sm.alerts.join("; ") : "nenhum"}</li>
