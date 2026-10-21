@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import type { BusyBlock, NotebookDoc, HelpRequest, Role, StudySession, Subject, TeacherSubject } from "./types";
+export type { HelpRequest };
 
 /**
  * Camada de dados isolada. Hoje grava no localStorage; para migrar para o
