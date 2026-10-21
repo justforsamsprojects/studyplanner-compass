@@ -102,6 +102,8 @@ function Index() {
             </div>
           ))}
         </div>
+
+        <DataTools />
       </div>
     </div>
   );
