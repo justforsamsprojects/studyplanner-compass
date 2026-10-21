@@ -108,7 +108,7 @@ function DisciplinasPage() {
         subjectCode: helpFor.code,
         subjectName: helpFor.name,
         anonymous,
-        studentName: anonymous ? undefined : studentName.trim(),
+        ...(anonymous ? {} : { studentName: studentName.trim() }),
         messages: [{ id: uid(), author: "aluno", text: helpMsg.trim(), createdAt: now }],
         summary: summaryFor(helpFor),
         status: "aguardando",
