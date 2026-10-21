@@ -86,6 +86,8 @@ function DisciplinasPage() {
   const [requests, setRequests] = useHelpRequests();
   const [helpFor, setHelpFor] = useState<Subject | null>(null);
   const [helpMsg, setHelpMsg] = useState("");
+  const [studentName, setStudentName] = useState("");
+  const [anonymous, setAnonymous] = useState(false);
 
   const summaryFor = (s: Subject) => ({
     plannedHours: sessions.filter((x) => x.subjectId === s.id).length,
@@ -96,17 +98,21 @@ function DisciplinasPage() {
 
   const sendHelp = () => {
     if (!helpFor?.code) return;
+    if (!anonymous && !studentName.trim()) { toast.error("Informe seu nome ou escolha enviar de forma anônima."); return; }
     if (!helpMsg.trim()) { toast.error("Escreva uma mensagem."); return; }
+    const now = new Date().toISOString();
     setRequests([
       ...requests,
       {
         id: uid(),
         subjectCode: helpFor.code,
         subjectName: helpFor.name,
-        message: helpMsg.trim(),
+        anonymous,
+        studentName: anonymous ? undefined : studentName.trim(),
+        messages: [{ id: uid(), author: "aluno", text: helpMsg.trim(), createdAt: now }],
         summary: summaryFor(helpFor),
-        status: "enviado",
-        createdAt: new Date().toISOString(),
+        status: "aguardando",
+        createdAt: now,
       },
     ]);
     setHelpFor(null);
