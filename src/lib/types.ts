@@ -73,7 +73,8 @@ export const DIFFICULTY_LABELS: Record<1 | 2 | 3, string> = {
   3: "Difícil",
 };
 
-export type HelpStatus = "enviado" | "respondido";
+/** "enviado" = legado, tratado como "aguardando". */
+export type HelpStatus = "aguardando" | "respondido" | "encerrado" | "enviado";
 
 export interface HelpSummary {
   plannedHours: number;
@@ -82,15 +83,28 @@ export interface HelpSummary {
   alerts: string[];
 }
 
+export interface HelpMessage {
+  id: string;
+  author: "aluno" | "professor";
+  text: string;
+  createdAt: string;
+}
+
 export interface HelpRequest {
   id: string;
   subjectCode: string;
   subjectName: string;
-  message: string;
+  /** nome do aluno; ausente quando anônimo */
+  studentName?: string;
+  anonymous?: boolean;
+  messages?: HelpMessage[];
   summary: HelpSummary;
   status: HelpStatus;
-  reply?: string;
+  closed?: boolean;
   createdAt: string;
+  /** legado (versão anterior) */
+  message?: string;
+  reply?: string;
 }
 
 /** Documento do caderno de estudos (privado do aluno). */

@@ -86,6 +86,8 @@ function DisciplinasPage() {
   const [requests, setRequests] = useHelpRequests();
   const [helpFor, setHelpFor] = useState<Subject | null>(null);
   const [helpMsg, setHelpMsg] = useState("");
+  const [studentName, setStudentName] = useState("");
+  const [anonymous, setAnonymous] = useState(false);
 
   const summaryFor = (s: Subject) => ({
     plannedHours: sessions.filter((x) => x.subjectId === s.id).length,
@@ -96,17 +98,21 @@ function DisciplinasPage() {
 
   const sendHelp = () => {
     if (!helpFor?.code) return;
+    if (!anonymous && !studentName.trim()) { toast.error("Informe seu nome ou escolha enviar de forma anônima."); return; }
     if (!helpMsg.trim()) { toast.error("Escreva uma mensagem."); return; }
+    const now = new Date().toISOString();
     setRequests([
       ...requests,
       {
         id: uid(),
         subjectCode: helpFor.code,
         subjectName: helpFor.name,
-        message: helpMsg.trim(),
+        anonymous,
+        ...(anonymous ? {} : { studentName: studentName.trim() }),
+        messages: [{ id: uid(), author: "aluno", text: helpMsg.trim(), createdAt: now }],
         summary: summaryFor(helpFor),
-        status: "enviado",
-        createdAt: new Date().toISOString(),
+        status: "aguardando",
+        createdAt: now,
       },
     ]);
     setHelpFor(null);
@@ -250,6 +256,25 @@ function DisciplinasPage() {
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
+              <Label>Seu nome</Label>
+              <Input
+                value={studentName}
+                onChange={(e) => setStudentName(e.target.value)}
+                placeholder="Ex.: Ana Souza"
+                disabled={anonymous}
+              />
+              <div className="flex flex-col gap-1 text-sm">
+                <label className="flex items-center gap-2">
+                  <input type="radio" checked={!anonymous} onChange={() => setAnonymous(false)} />
+                  Enviar com meu nome
+                </label>
+                <label className="flex items-center gap-2">
+                  <input type="radio" checked={anonymous} onChange={() => setAnonymous(true)} />
+                  Enviar de forma anônima
+                </label>
+              </div>
+            </div>
+            <div className="space-y-2">
               <Label>Mensagem</Label>
               <Textarea value={helpMsg} onChange={(e) => setHelpMsg(e.target.value)} placeholder="Descreva sua dúvida ou dificuldade" />
             </div>
@@ -260,6 +285,9 @@ function DisciplinasPage() {
                   const sm = summaryFor(helpFor);
                   return (
                     <ul className="space-y-1 text-muted-foreground">
+                      <li className="font-medium text-foreground">
+                        Nome: {anonymous ? "não será enviado (Aluno anônimo)" : studentName.trim() || "(informe seu nome)"}
+                      </li>
                       <li>Horas planejadas: {sm.plannedHours}h</li>
                       <li>Horas estudadas: {sm.studiedHours}h / {sm.neededHours}h</li>
                       <li>Alertas: {sm.alerts.length ? sm.alerts.join("; ") : "nenhum"}</li>
