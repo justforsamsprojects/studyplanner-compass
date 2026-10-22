@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
 import type { BusyBlock, NotebookDoc, HelpRequest, Role, StudySession, Subject, TeacherSubject } from "./types";
-export type { HelpRequest };
 
 /**
  * Camada de dados isolada. Hoje grava no localStorage; para migrar para o
@@ -167,7 +166,7 @@ export function loadSampleData() {
 
   const doc: NotebookDoc = {
     id: uid(),
-    subjectId: subjects[0].id,
+    subjectId: subjects[0]!.id,
     title: "Resumo: Limites",
     content:
       "<h1>Limites</h1><p>O <strong>limite</strong> descreve o valor de que uma função se aproxima.</p><h2>Propriedades</h2><ul><li>Limite da soma é a soma dos limites</li><li>Limite do produto é o produto dos limites</li></ul><p><em>Revisar exemplos da aula 2.</em></p>",

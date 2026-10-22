@@ -1,8 +1,21 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { BookOpen, CalendarRange, GraduationCap, LineChart, Users } from "lucide-react";
+import { useRef } from "react";
+import { toast } from "sonner";
+import { BookOpen, CalendarRange, Download, GraduationCap, LineChart, Sparkles, Trash2, Upload, Users } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useRole } from "@/lib/storage";
+import { clearAllData, exportAllData, importAllData, loadSampleData, useRole } from "@/lib/storage";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -104,6 +117,80 @@ function Index() {
         </div>
 
         <DataTools />
+      </div>
+    </div>
+  );
+}
+
+function DataTools() {
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const doExport = () => {
+    const blob = new Blob([JSON.stringify(exportAllData(), null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `studyplanner-dados-${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 30_000);
+    toast.success("Dados exportados");
+  };
+
+  const onFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    try {
+      importAllData(JSON.parse(await file.text()));
+      toast.success("Dados importados e restaurados");
+    } catch {
+      toast.error("Arquivo inválido. Use um arquivo exportado pelo StudyPlanner.");
+    }
+  };
+
+  return (
+    <div className="mt-12 rounded-xl border border-border bg-card p-4">
+      <p className="font-semibold text-foreground">Seus dados</p>
+      <p className="mt-1 text-sm text-muted-foreground">
+        Faça uma cópia de tudo o que está salvo neste navegador, restaure de um arquivo ou comece do zero.
+      </p>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <Button variant="outline" onClick={() => { loadSampleData(); toast.success("Dados de exemplo carregados"); }}>
+          <Sparkles className="size-4" /> Carregar dados de exemplo
+        </Button>
+        <Button variant="outline" onClick={doExport}>
+          <Download className="size-4" /> Exportar dados
+        </Button>
+        <Button variant="outline" onClick={() => fileRef.current?.click()}>
+          <Upload className="size-4" /> Importar dados
+        </Button>
+        <input ref={fileRef} type="file" accept="application/json,.json" className="hidden" onChange={onFile} />
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="outline" className="text-destructive">
+              <Trash2 className="size-4" /> Limpar dados
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Limpar todos os dados?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Rotina, disciplinas, plano, pedidos de ajuda, cadernos e disciplinas do professor serão apagados deste navegador. Exporte antes se quiser guardar uma cópia.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogAction
+                className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                onClick={() => { clearAllData(); toast.success("Dados apagados"); }}
+              >
+                Limpar dados
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );
