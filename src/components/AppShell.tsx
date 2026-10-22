@@ -28,7 +28,7 @@ interface AppShellProps {
 export function AppShell({ nav, badge, title, subtitle, actions, children }: AppShellProps) {
   return (
     <div className="min-h-screen bg-background">
-      <header className="sticky top-0 z-20 border-b border-border bg-card/85 backdrop-blur">
+      <header className="print:hidden sticky top-0 z-20 border-b border-border bg-card/85 backdrop-blur">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-3 px-4 py-3">
           <Link to="/" className="flex items-center gap-2">
             <span className="flex size-9 items-center justify-center rounded-xl bg-brand-gradient text-primary-foreground">
@@ -61,7 +61,7 @@ export function AppShell({ nav, badge, title, subtitle, actions, children }: App
             <h1 className="text-2xl font-bold text-foreground sm:text-3xl">{title}</h1>
             {subtitle ? <p className="mt-1 text-sm text-muted-foreground">{subtitle}</p> : null}
           </div>
-          {actions ? <div className="flex flex-wrap gap-2">{actions}</div> : null}
+          {actions ? <div className="flex flex-wrap gap-2 print:hidden">{actions}</div> : null}
         </div>
         {children}
       </main>

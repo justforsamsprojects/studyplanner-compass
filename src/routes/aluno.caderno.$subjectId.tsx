@@ -1,6 +1,6 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowLeft, FileText, Pencil, Plus, Trash2 } from "lucide-react";
+import { ArrowLeft, FileText, Pencil, Plus, Printer, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { AppShell, alunoNav } from "@/components/AppShell";
 import { NotebookEditor } from "@/components/NotebookEditor";
@@ -91,12 +91,19 @@ function CadernoPage() {
       title={`Caderno — ${subject?.name ?? ""}`}
       subtitle="Seu caderno é privado: o professor não tem acesso."
       actions={
+        <>
+        {current ? (
+          <Button variant="secondary" onClick={() => window.print()}>
+            <Printer className="size-4" /> Imprimir / PDF
+          </Button>
+        ) : null}
         <Button asChild variant="secondary">
           <Link to="/aluno/disciplinas"><ArrowLeft className="size-4" /> Disciplinas</Link>
         </Button>
+        </>
       }
     >
-      <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
+      <div className="grid gap-6 lg:grid-cols-[280px_1fr] print:hidden">
         <Card className="h-fit">
           <CardHeader className="flex-row items-center justify-between space-y-0 pb-3">
             <CardTitle className="text-base">Documentos</CardTitle>
@@ -149,6 +156,13 @@ function CadernoPage() {
           )}
         </div>
       </div>
+
+      {current ? (
+        <article className="notebook-prose hidden print:block">
+          <h1>{current.title}</h1>
+          <div dangerouslySetInnerHTML={{ __html: current.content }} />
+        </article>
+      ) : null}
 
       <Dialog open={!!rename} onOpenChange={(o) => !o && setRename(null)}>
         <DialogContent>

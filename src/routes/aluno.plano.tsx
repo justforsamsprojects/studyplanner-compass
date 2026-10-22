@@ -1,5 +1,6 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import { toast } from "sonner";
+import { Printer } from "lucide-react";
 import { AppShell, alunoNav } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -58,9 +59,16 @@ function PlanoPage() {
           : "Gere um plano com sessões de 1 hora nas suas janelas livres entre 7h e 22h."
       }
       actions={
+        <>
+        {hasPlan ? (
+          <Button variant="secondary" onClick={() => window.print()}>
+            <Printer className="size-4" /> Imprimir / PDF
+          </Button>
+        ) : null}
         <Button onClick={gerar} variant={hasPlan ? "secondary" : "default"}>
           {hasPlan ? "Regerar plano" : "Gerar plano"}
         </Button>
+        </>
       }
     >
       {!hasPlan ? (
@@ -73,7 +81,7 @@ function PlanoPage() {
           </CardContent>
         </Card>
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4 print:grid-cols-2">
           {dates.map((date, i) => {
             const iso = toISO(date);
             const daySessions = sessions
@@ -114,7 +122,7 @@ function PlanoPage() {
                             to="/aluno/caderno/$subjectId"
                             params={{ subjectId: s.subjectId }}
                             onClick={(e) => e.stopPropagation()}
-                            className="mt-1 block text-xs font-medium text-primary hover:underline"
+                            className="mt-1 block text-xs font-medium text-primary hover:underline print:hidden"
                           >
                             Abrir caderno
                           </Link>
