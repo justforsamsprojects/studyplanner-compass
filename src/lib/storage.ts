@@ -39,6 +39,18 @@ function write<T>(key: string, value: T) {
   }
 }
 
+export const readKey = read;
+export const writeKey = write;
+
+/** Apaga os dados locais sem disparar sincronização (usado ao sair da conta). */
+export function removeKeysSilently() {
+  if (typeof window === "undefined") return;
+  Object.values(KEYS).forEach((k) => window.localStorage.removeItem(k));
+  Object.values(KEYS).forEach((k) =>
+    window.dispatchEvent(new CustomEvent("studyplanner:change", { detail: k, bubbles: false })),
+  );
+}
+
 export function uid() {
   return Math.random().toString(36).slice(2, 10);
 }
@@ -89,10 +101,6 @@ export const useHelpRequests = () => usePersisted<HelpRequest[]>(KEYS.helpReques
 /** Cadernos: privados do aluno, nunca lidos nas telas do professor. */
 export const useNotebookDocs = () => usePersisted<NotebookDoc[]>(KEYS.notebookDocs, []);
 
-export function readTeacherSubjects() {
-  return read<TeacherSubject[]>(KEYS.teacherSubjects, []);
-}
-
 export function generateCode() {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   let code = "";
@@ -121,7 +129,7 @@ export function loadSampleData() {
     { id: uid(), day: 5, start: 9, end: 11, label: "Curso de inglês", type: "aula" },
   ];
 
-  const teacherCode = "EST2K7";
+  const teacherCode = generateCode();
   const teacherSubject: TeacherSubject = {
     id: uid(),
     name: "Estatística Aplicada",
