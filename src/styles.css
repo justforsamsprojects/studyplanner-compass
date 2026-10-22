@@ -186,3 +186,9 @@
 .notebook-prose a { color: var(--primary); text-decoration: underline; }
 .notebook-prose img { max-width: 100%; height: auto; border-radius: .5rem; margin: .75rem 0; }
 .notebook-prose img.ProseMirror-selectednode { outline: 2px solid var(--primary); }
+
+@media print {
+  @page { size: A4; margin: 14mm; }
+  body { background: white; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
