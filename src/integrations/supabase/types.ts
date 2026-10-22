@@ -14,13 +14,102 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      help_requests: {
+        Row: {
+          data: Json
+          id: string
+          student_id: string
+          subject_code: string
+          updated_at: string
+        }
+        Insert: {
+          data: Json
+          id: string
+          student_id?: string
+          subject_code: string
+          updated_at?: string
+        }
+        Update: {
+          data?: Json
+          id?: string
+          student_id?: string
+          subject_code?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          role: string
+        }
+        Insert: {
+          created_at?: string
+          id: string
+          name?: string
+          role?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          role?: string
+        }
+        Relationships: []
+      }
+      teacher_subjects: {
+        Row: {
+          code: string
+          created_at: string
+          dates: Json
+          id: string
+          name: string
+          owner_id: string
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          dates?: Json
+          id: string
+          name: string
+          owner_id?: string
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          dates?: Json
+          id?: string
+          name?: string
+          owner_id?: string
+        }
+        Relationships: []
+      }
+      user_data: {
+        Row: {
+          data: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          data?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          data?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      owns_subject_code: { Args: { _code: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
