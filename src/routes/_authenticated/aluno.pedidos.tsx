@@ -7,7 +7,7 @@ import { HelpStatusBadge, HelpThread } from "@/components/HelpThread";
 import { useHelpRequests } from "@/lib/storage";
 import { hasTeacherReply } from "@/lib/help";
 
-export const Route = createFileRoute("/aluno/pedidos")({
+export const Route = createFileRoute("/_authenticated/aluno/pedidos")({
   head: () => ({
     meta: [
       { title: "Meus pedidos — StudyPlanner" },

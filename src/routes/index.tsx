@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { BookOpen, CalendarRange, Download, GraduationCap, LineChart, Sparkles, Trash2, Upload, Users } from "lucide-react";
 import {
@@ -37,12 +38,32 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
-  const [, setRole] = useRole();
+  const [role] = useRole();
   const navigate = useNavigate();
+  const [user, setUser] = useState<{ name: string } | null>(null);
 
-  const choose = (role: "aluno" | "professor") => {
-    setRole(role);
-    navigate({ to: role === "aluno" ? "/aluno/rotina" : "/professor" });
+  useEffect(() => {
+    const load = async () => {
+      const { data } = await supabase.auth.getUser();
+      if (!data.user) { setUser(null); return; }
+      const { data: p } = await supabase.from("profiles").select("name").eq("id", data.user.id).maybeSingle();
+      setUser({ name: p?.name || data.user.email || "" });
+    };
+    void load();
+    const { data } = supabase.auth.onAuthStateChange(() => void load());
+    return () => data.subscription.unsubscribe();
+  }, []);
+
+  const choose = (r: "aluno" | "professor") => {
+    if (!user) { navigate({ to: "/auth", search: { role: r } }); return; }
+    const mine = role ?? r;
+    if (mine !== r) toast.info(`Sua conta é de ${mine}.`);
+    navigate({ to: mine === "aluno" ? "/aluno/rotina" : "/professor" });
+  };
+
+  const sair = async () => {
+    await supabase.auth.signOut();
+    toast.success("Você saiu da conta.");
   };
 
   return (
@@ -53,6 +74,16 @@ function Index() {
             <GraduationCap className="size-6" />
           </span>
           <span className="font-display text-lg font-bold text-foreground">StudyPlanner</span>
+          <div className="ml-auto flex items-center gap-2 text-sm">
+            {user ? (
+              <>
+                <span className="text-muted-foreground">Olá, {user.name}</span>
+                <Button size="sm" variant="secondary" onClick={sair}>Sair</Button>
+              </>
+            ) : (
+              <Button size="sm" onClick={() => navigate({ to: "/auth" })}>Entrar</Button>
+            )}
+          </div>
         </div>
 
         <h1 className="mt-10 max-w-2xl text-4xl font-bold text-foreground sm:text-5xl">
@@ -116,7 +147,7 @@ function Index() {
           ))}
         </div>
 
-        <DataTools />
+        {user ? <DataTools /> : null}
       </div>
     </div>
   );

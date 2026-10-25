@@ -14,11 +14,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { isCodeTaken } from "@/lib/cloud-sync";
 import { generateCode, uid, useTeacherSubjects } from "@/lib/storage";
 import { formatDate } from "@/lib/planner";
 import type { TeacherDate, TeacherDateKind } from "@/lib/types";
 
-export const Route = createFileRoute("/professor")({
+export const Route = createFileRoute("/_authenticated/professor")({
   head: () => ({
     meta: [
       { title: "Professor — StudyPlanner" },
@@ -48,10 +49,11 @@ function ProfessorPage() {
     setDate("");
   };
 
-  const create = () => {
+  const create = async () => {
     if (!name.trim()) { toast.error("Informe o nome da disciplina."); return; }
     if (dates.length === 0) { toast.error("Adicione ao menos uma data de prova ou entrega."); return; }
-    const code = generateCode();
+    let code = generateCode();
+    while (await isCodeTaken(code)) code = generateCode();
     setSubjects([...subjects, { id: uid(), name: name.trim(), code, dates }]);
     setName("");
     setDates([]);

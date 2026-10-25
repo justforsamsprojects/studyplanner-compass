@@ -1,0 +1,3 @@
+- [x] Login e sincronização na nuvem
+- [x] Corrigir erro de build
+- [x] Imprimir / PDF
