@@ -10,111 +10,117 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AlunoRouteImport } from './routes/aluno'
-import { Route as ProfessorRouteImport } from './routes/professor'
-import { Route as AlunoIndexRouteImport } from './routes/aluno.index'
-import { Route as AlunoDisciplinasRouteImport } from './routes/aluno.disciplinas'
-import { Route as AlunoPainelRouteImport } from './routes/aluno.painel'
-import { Route as AlunoPedidosRouteImport } from './routes/aluno.pedidos'
-import { Route as AlunoPlanoRouteImport } from './routes/aluno.plano'
-import { Route as AlunoRotinaRouteImport } from './routes/aluno.rotina'
-import { Route as ProfessorPedidosRouteImport } from './routes/professor_.pedidos'
-import { Route as AlunoCadernoSubjectIdRouteImport } from './routes/aluno.caderno.$subjectId'
+import { Route as AuthenticatedAlunoRouteImport } from './routes/_authenticated/aluno'
+import { Route as AuthenticatedProfessorRouteImport } from './routes/_authenticated/professor'
+import { Route as AuthenticatedAlunoIndexRouteImport } from './routes/_authenticated/aluno.index'
+import { Route as AuthenticatedAlunoDisciplinasRouteImport } from './routes/_authenticated/aluno.disciplinas'
+import { Route as AuthenticatedAlunoPainelRouteImport } from './routes/_authenticated/aluno.painel'
+import { Route as AuthenticatedAlunoPedidosRouteImport } from './routes/_authenticated/aluno.pedidos'
+import { Route as AuthenticatedAlunoPlanoRouteImport } from './routes/_authenticated/aluno.plano'
+import { Route as AuthenticatedAlunoRotinaRouteImport } from './routes/_authenticated/aluno.rotina'
+import { Route as AuthenticatedProfessorPedidosRouteImport } from './routes/_authenticated/professor_.pedidos'
+import { Route as AuthenticatedAlunoCadernoSubjectIdRouteImport } from './routes/_authenticated/aluno.caderno.$subjectId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AlunoRoute = AlunoRouteImport.update({
-  id: '/aluno',
+const AuthenticatedAlunoRoute = AuthenticatedAlunoRouteImport.update({
+  id: '/_authenticated/aluno',
   path: '/aluno',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProfessorRoute = ProfessorRouteImport.update({
-  id: '/professor',
+const AuthenticatedProfessorRoute = AuthenticatedProfessorRouteImport.update({
+  id: '/_authenticated/professor',
   path: '/professor',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AlunoIndexRoute = AlunoIndexRouteImport.update({
+const AuthenticatedAlunoIndexRoute = AuthenticatedAlunoIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AlunoRoute,
+  getParentRoute: () => AuthenticatedAlunoRoute,
 } as any)
-const AlunoDisciplinasRoute = AlunoDisciplinasRouteImport.update({
-  id: '/disciplinas',
-  path: '/disciplinas',
-  getParentRoute: () => AlunoRoute,
-} as any)
-const AlunoPainelRoute = AlunoPainelRouteImport.update({
-  id: '/painel',
-  path: '/painel',
-  getParentRoute: () => AlunoRoute,
-} as any)
-const AlunoPedidosRoute = AlunoPedidosRouteImport.update({
-  id: '/pedidos',
-  path: '/pedidos',
-  getParentRoute: () => AlunoRoute,
-} as any)
-const AlunoPlanoRoute = AlunoPlanoRouteImport.update({
+const AuthenticatedAlunoDisciplinasRoute =
+  AuthenticatedAlunoDisciplinasRouteImport.update({
+    id: '/disciplinas',
+    path: '/disciplinas',
+    getParentRoute: () => AuthenticatedAlunoRoute,
+  } as any)
+const AuthenticatedAlunoPainelRoute =
+  AuthenticatedAlunoPainelRouteImport.update({
+    id: '/painel',
+    path: '/painel',
+    getParentRoute: () => AuthenticatedAlunoRoute,
+  } as any)
+const AuthenticatedAlunoPedidosRoute =
+  AuthenticatedAlunoPedidosRouteImport.update({
+    id: '/pedidos',
+    path: '/pedidos',
+    getParentRoute: () => AuthenticatedAlunoRoute,
+  } as any)
+const AuthenticatedAlunoPlanoRoute = AuthenticatedAlunoPlanoRouteImport.update({
   id: '/plano',
   path: '/plano',
-  getParentRoute: () => AlunoRoute,
+  getParentRoute: () => AuthenticatedAlunoRoute,
 } as any)
-const AlunoRotinaRoute = AlunoRotinaRouteImport.update({
-  id: '/rotina',
-  path: '/rotina',
-  getParentRoute: () => AlunoRoute,
-} as any)
-const ProfessorPedidosRoute = ProfessorPedidosRouteImport.update({
-  id: '/professor_/pedidos',
-  path: '/professor/pedidos',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AlunoCadernoSubjectIdRoute = AlunoCadernoSubjectIdRouteImport.update({
-  id: '/caderno/$subjectId',
-  path: '/caderno/$subjectId',
-  getParentRoute: () => AlunoRoute,
-} as any)
+const AuthenticatedAlunoRotinaRoute =
+  AuthenticatedAlunoRotinaRouteImport.update({
+    id: '/rotina',
+    path: '/rotina',
+    getParentRoute: () => AuthenticatedAlunoRoute,
+  } as any)
+const AuthenticatedProfessorPedidosRoute =
+  AuthenticatedProfessorPedidosRouteImport.update({
+    id: '/_authenticated/professor_/pedidos',
+    path: '/professor/pedidos',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const AuthenticatedAlunoCadernoSubjectIdRoute =
+  AuthenticatedAlunoCadernoSubjectIdRouteImport.update({
+    id: '/caderno/$subjectId',
+    path: '/caderno/$subjectId',
+    getParentRoute: () => AuthenticatedAlunoRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/aluno': typeof AlunoRouteWithChildren
-  '/professor': typeof ProfessorRoute
-  '/aluno/disciplinas': typeof AlunoDisciplinasRoute
-  '/aluno/painel': typeof AlunoPainelRoute
-  '/aluno/pedidos': typeof AlunoPedidosRoute
-  '/aluno/plano': typeof AlunoPlanoRoute
-  '/aluno/rotina': typeof AlunoRotinaRoute
-  '/professor/pedidos': typeof ProfessorPedidosRoute
-  '/aluno/': typeof AlunoIndexRoute
-  '/aluno/caderno/$subjectId': typeof AlunoCadernoSubjectIdRoute
+  '/aluno': typeof AuthenticatedAlunoRouteWithChildren
+  '/professor': typeof AuthenticatedProfessorRoute
+  '/aluno/disciplinas': typeof AuthenticatedAlunoDisciplinasRoute
+  '/aluno/painel': typeof AuthenticatedAlunoPainelRoute
+  '/aluno/pedidos': typeof AuthenticatedAlunoPedidosRoute
+  '/aluno/plano': typeof AuthenticatedAlunoPlanoRoute
+  '/aluno/rotina': typeof AuthenticatedAlunoRotinaRoute
+  '/professor/pedidos': typeof AuthenticatedProfessorPedidosRoute
+  '/aluno/': typeof AuthenticatedAlunoIndexRoute
+  '/aluno/caderno/$subjectId': typeof AuthenticatedAlunoCadernoSubjectIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/professor': typeof ProfessorRoute
-  '/aluno/disciplinas': typeof AlunoDisciplinasRoute
-  '/aluno/painel': typeof AlunoPainelRoute
-  '/aluno/pedidos': typeof AlunoPedidosRoute
-  '/aluno/plano': typeof AlunoPlanoRoute
-  '/aluno/rotina': typeof AlunoRotinaRoute
-  '/professor/pedidos': typeof ProfessorPedidosRoute
-  '/aluno': typeof AlunoIndexRoute
-  '/aluno/caderno/$subjectId': typeof AlunoCadernoSubjectIdRoute
+  '/professor': typeof AuthenticatedProfessorRoute
+  '/aluno/disciplinas': typeof AuthenticatedAlunoDisciplinasRoute
+  '/aluno/painel': typeof AuthenticatedAlunoPainelRoute
+  '/aluno/pedidos': typeof AuthenticatedAlunoPedidosRoute
+  '/aluno/plano': typeof AuthenticatedAlunoPlanoRoute
+  '/aluno/rotina': typeof AuthenticatedAlunoRotinaRoute
+  '/professor/pedidos': typeof AuthenticatedProfessorPedidosRoute
+  '/aluno': typeof AuthenticatedAlunoIndexRoute
+  '/aluno/caderno/$subjectId': typeof AuthenticatedAlunoCadernoSubjectIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/aluno': typeof AlunoRouteWithChildren
-  '/professor': typeof ProfessorRoute
-  '/aluno/disciplinas': typeof AlunoDisciplinasRoute
-  '/aluno/painel': typeof AlunoPainelRoute
-  '/aluno/pedidos': typeof AlunoPedidosRoute
-  '/aluno/plano': typeof AlunoPlanoRoute
-  '/aluno/rotina': typeof AlunoRotinaRoute
-  '/professor_/pedidos': typeof ProfessorPedidosRoute
-  '/aluno/': typeof AlunoIndexRoute
-  '/aluno/caderno/$subjectId': typeof AlunoCadernoSubjectIdRoute
+  '/_authenticated/aluno': typeof AuthenticatedAlunoRouteWithChildren
+  '/_authenticated/professor': typeof AuthenticatedProfessorRoute
+  '/_authenticated/aluno/disciplinas': typeof AuthenticatedAlunoDisciplinasRoute
+  '/_authenticated/aluno/painel': typeof AuthenticatedAlunoPainelRoute
+  '/_authenticated/aluno/pedidos': typeof AuthenticatedAlunoPedidosRoute
+  '/_authenticated/aluno/plano': typeof AuthenticatedAlunoPlanoRoute
+  '/_authenticated/aluno/rotina': typeof AuthenticatedAlunoRotinaRoute
+  '/_authenticated/professor_/pedidos': typeof AuthenticatedProfessorPedidosRoute
+  '/_authenticated/aluno/': typeof AuthenticatedAlunoIndexRoute
+  '/_authenticated/aluno/caderno/$subjectId': typeof AuthenticatedAlunoCadernoSubjectIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -145,23 +151,23 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
-    | '/aluno'
-    | '/professor'
-    | '/aluno/disciplinas'
-    | '/aluno/painel'
-    | '/aluno/pedidos'
-    | '/aluno/plano'
-    | '/aluno/rotina'
-    | '/professor_/pedidos'
-    | '/aluno/'
-    | '/aluno/caderno/$subjectId'
+    | '/_authenticated/aluno'
+    | '/_authenticated/professor'
+    | '/_authenticated/aluno/disciplinas'
+    | '/_authenticated/aluno/painel'
+    | '/_authenticated/aluno/pedidos'
+    | '/_authenticated/aluno/plano'
+    | '/_authenticated/aluno/rotina'
+    | '/_authenticated/professor_/pedidos'
+    | '/_authenticated/aluno/'
+    | '/_authenticated/aluno/caderno/$subjectId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AlunoRoute: typeof AlunoRouteWithChildren
-  ProfessorRoute: typeof ProfessorRoute
-  ProfessorPedidosRoute: typeof ProfessorPedidosRoute
+  AuthenticatedAlunoRoute: typeof AuthenticatedAlunoRouteWithChildren
+  AuthenticatedProfessorRoute: typeof AuthenticatedProfessorRoute
+  AuthenticatedProfessorPedidosRoute: typeof AuthenticatedProfessorPedidosRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -173,106 +179,108 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/aluno': {
-      id: '/aluno'
+    '/_authenticated/aluno': {
+      id: '/_authenticated/aluno'
       path: '/aluno'
       fullPath: '/aluno'
-      preLoaderRoute: typeof AlunoRouteImport
+      preLoaderRoute: typeof AuthenticatedAlunoRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/professor': {
-      id: '/professor'
+    '/_authenticated/professor': {
+      id: '/_authenticated/professor'
       path: '/professor'
       fullPath: '/professor'
-      preLoaderRoute: typeof ProfessorRouteImport
+      preLoaderRoute: typeof AuthenticatedProfessorRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/aluno/': {
-      id: '/aluno/'
+    '/_authenticated/aluno/': {
+      id: '/_authenticated/aluno/'
       path: '/'
       fullPath: '/aluno/'
-      preLoaderRoute: typeof AlunoIndexRouteImport
-      parentRoute: typeof AlunoRoute
+      preLoaderRoute: typeof AuthenticatedAlunoIndexRouteImport
+      parentRoute: typeof AuthenticatedAlunoRoute
     }
-    '/aluno/disciplinas': {
-      id: '/aluno/disciplinas'
+    '/_authenticated/aluno/disciplinas': {
+      id: '/_authenticated/aluno/disciplinas'
       path: '/disciplinas'
       fullPath: '/aluno/disciplinas'
-      preLoaderRoute: typeof AlunoDisciplinasRouteImport
-      parentRoute: typeof AlunoRoute
+      preLoaderRoute: typeof AuthenticatedAlunoDisciplinasRouteImport
+      parentRoute: typeof AuthenticatedAlunoRoute
     }
-    '/aluno/painel': {
-      id: '/aluno/painel'
+    '/_authenticated/aluno/painel': {
+      id: '/_authenticated/aluno/painel'
       path: '/painel'
       fullPath: '/aluno/painel'
-      preLoaderRoute: typeof AlunoPainelRouteImport
-      parentRoute: typeof AlunoRoute
+      preLoaderRoute: typeof AuthenticatedAlunoPainelRouteImport
+      parentRoute: typeof AuthenticatedAlunoRoute
     }
-    '/aluno/pedidos': {
-      id: '/aluno/pedidos'
+    '/_authenticated/aluno/pedidos': {
+      id: '/_authenticated/aluno/pedidos'
       path: '/pedidos'
       fullPath: '/aluno/pedidos'
-      preLoaderRoute: typeof AlunoPedidosRouteImport
-      parentRoute: typeof AlunoRoute
+      preLoaderRoute: typeof AuthenticatedAlunoPedidosRouteImport
+      parentRoute: typeof AuthenticatedAlunoRoute
     }
-    '/aluno/plano': {
-      id: '/aluno/plano'
+    '/_authenticated/aluno/plano': {
+      id: '/_authenticated/aluno/plano'
       path: '/plano'
       fullPath: '/aluno/plano'
-      preLoaderRoute: typeof AlunoPlanoRouteImport
-      parentRoute: typeof AlunoRoute
+      preLoaderRoute: typeof AuthenticatedAlunoPlanoRouteImport
+      parentRoute: typeof AuthenticatedAlunoRoute
     }
-    '/aluno/rotina': {
-      id: '/aluno/rotina'
+    '/_authenticated/aluno/rotina': {
+      id: '/_authenticated/aluno/rotina'
       path: '/rotina'
       fullPath: '/aluno/rotina'
-      preLoaderRoute: typeof AlunoRotinaRouteImport
-      parentRoute: typeof AlunoRoute
+      preLoaderRoute: typeof AuthenticatedAlunoRotinaRouteImport
+      parentRoute: typeof AuthenticatedAlunoRoute
     }
-    '/professor_/pedidos': {
-      id: '/professor_/pedidos'
+    '/_authenticated/professor_/pedidos': {
+      id: '/_authenticated/professor_/pedidos'
       path: '/professor/pedidos'
       fullPath: '/professor/pedidos'
-      preLoaderRoute: typeof ProfessorPedidosRouteImport
+      preLoaderRoute: typeof AuthenticatedProfessorPedidosRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/aluno/caderno/$subjectId': {
-      id: '/aluno/caderno/$subjectId'
+    '/_authenticated/aluno/caderno/$subjectId': {
+      id: '/_authenticated/aluno/caderno/$subjectId'
       path: '/caderno/$subjectId'
       fullPath: '/aluno/caderno/$subjectId'
-      preLoaderRoute: typeof AlunoCadernoSubjectIdRouteImport
-      parentRoute: typeof AlunoRoute
+      preLoaderRoute: typeof AuthenticatedAlunoCadernoSubjectIdRouteImport
+      parentRoute: typeof AuthenticatedAlunoRoute
     }
   }
 }
 
-interface AlunoRouteChildren {
-  AlunoDisciplinasRoute: typeof AlunoDisciplinasRoute
-  AlunoPainelRoute: typeof AlunoPainelRoute
-  AlunoPedidosRoute: typeof AlunoPedidosRoute
-  AlunoPlanoRoute: typeof AlunoPlanoRoute
-  AlunoRotinaRoute: typeof AlunoRotinaRoute
-  AlunoIndexRoute: typeof AlunoIndexRoute
-  AlunoCadernoSubjectIdRoute: typeof AlunoCadernoSubjectIdRoute
+interface AuthenticatedAlunoRouteChildren {
+  AuthenticatedAlunoDisciplinasRoute: typeof AuthenticatedAlunoDisciplinasRoute
+  AuthenticatedAlunoPainelRoute: typeof AuthenticatedAlunoPainelRoute
+  AuthenticatedAlunoPedidosRoute: typeof AuthenticatedAlunoPedidosRoute
+  AuthenticatedAlunoPlanoRoute: typeof AuthenticatedAlunoPlanoRoute
+  AuthenticatedAlunoRotinaRoute: typeof AuthenticatedAlunoRotinaRoute
+  AuthenticatedAlunoIndexRoute: typeof AuthenticatedAlunoIndexRoute
+  AuthenticatedAlunoCadernoSubjectIdRoute: typeof AuthenticatedAlunoCadernoSubjectIdRoute
 }
 
-const AlunoRouteChildren: AlunoRouteChildren = {
-  AlunoDisciplinasRoute: AlunoDisciplinasRoute,
-  AlunoPainelRoute: AlunoPainelRoute,
-  AlunoPedidosRoute: AlunoPedidosRoute,
-  AlunoPlanoRoute: AlunoPlanoRoute,
-  AlunoRotinaRoute: AlunoRotinaRoute,
-  AlunoIndexRoute: AlunoIndexRoute,
-  AlunoCadernoSubjectIdRoute: AlunoCadernoSubjectIdRoute,
+const AuthenticatedAlunoRouteChildren: AuthenticatedAlunoRouteChildren = {
+  AuthenticatedAlunoDisciplinasRoute: AuthenticatedAlunoDisciplinasRoute,
+  AuthenticatedAlunoPainelRoute: AuthenticatedAlunoPainelRoute,
+  AuthenticatedAlunoPedidosRoute: AuthenticatedAlunoPedidosRoute,
+  AuthenticatedAlunoPlanoRoute: AuthenticatedAlunoPlanoRoute,
+  AuthenticatedAlunoRotinaRoute: AuthenticatedAlunoRotinaRoute,
+  AuthenticatedAlunoIndexRoute: AuthenticatedAlunoIndexRoute,
+  AuthenticatedAlunoCadernoSubjectIdRoute:
+    AuthenticatedAlunoCadernoSubjectIdRoute,
 }
 
-const AlunoRouteWithChildren = AlunoRoute._addFileChildren(AlunoRouteChildren)
+const AuthenticatedAlunoRouteWithChildren =
+  AuthenticatedAlunoRoute._addFileChildren(AuthenticatedAlunoRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AlunoRoute: AlunoRouteWithChildren,
-  ProfessorRoute: ProfessorRoute,
-  ProfessorPedidosRoute: ProfessorPedidosRoute,
+  AuthenticatedAlunoRoute: AuthenticatedAlunoRouteWithChildren,
+  AuthenticatedProfessorRoute: AuthenticatedProfessorRoute,
+  AuthenticatedProfessorPedidosRoute: AuthenticatedProfessorPedidosRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

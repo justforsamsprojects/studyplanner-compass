@@ -13,6 +13,8 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { supabase } from "@/integrations/supabase/client";
+import { onLocalChange, pullAll, pullShared, stopSync } from "@/lib/cloud-sync";
 
 function NotFoundComponent() {
   return (
@@ -116,7 +118,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <head>
         <HeadContent />
       </head>
@@ -130,6 +132,31 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const router = useRouter();
+
+  useEffect(() => {
+    let current: string | null = null;
+    const onChange = (e: Event) => onLocalChange(String((e as CustomEvent).detail));
+    window.addEventListener("studyplanner:change", onChange);
+    const onFocus = () => void pullShared();
+    window.addEventListener("focus", onFocus);
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+      const uid = session?.user.id ?? null;
+      if (uid && uid !== current) {
+        current = uid;
+        void pullAll(uid);
+      } else if (!uid && current) {
+        current = null;
+        stopSync();
+      }
+      if (event === "SIGNED_IN" || event === "SIGNED_OUT" || event === "USER_UPDATED") router.invalidate();
+    });
+    return () => {
+      data.subscription.unsubscribe();
+      window.removeEventListener("studyplanner:change", onChange);
+      window.removeEventListener("focus", onFocus);
+    };
+  }, [router]);
 
   return (
     <QueryClientProvider client={queryClient}>
