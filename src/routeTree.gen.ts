@@ -10,6 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedAlunoRouteImport } from './routes/_authenticated/aluno'
 import { Route as AuthenticatedProfessorRouteImport } from './routes/_authenticated/professor'
 import { Route as AuthenticatedAlunoIndexRouteImport } from './routes/_authenticated/aluno.index'
@@ -26,15 +28,24 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedAlunoRoute = AuthenticatedAlunoRouteImport.update({
-  id: '/_authenticated/aluno',
-  path: '/aluno',
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedProfessorRoute = AuthenticatedProfessorRouteImport.update({
-  id: '/_authenticated/professor',
-  path: '/professor',
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAlunoRoute = AuthenticatedAlunoRouteImport.update({
+  id: '/aluno',
+  path: '/aluno',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedProfessorRoute = AuthenticatedProfessorRouteImport.update({
+  id: '/professor',
+  path: '/professor',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedAlunoIndexRoute = AuthenticatedAlunoIndexRouteImport.update({
   id: '/',
@@ -72,9 +83,9 @@ const AuthenticatedAlunoRotinaRoute =
   } as any)
 const AuthenticatedProfessorPedidosRoute =
   AuthenticatedProfessorPedidosRouteImport.update({
-    id: '/_authenticated/professor_/pedidos',
+    id: '/professor_/pedidos',
     path: '/professor/pedidos',
-    getParentRoute: () => rootRouteImport,
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedAlunoCadernoSubjectIdRoute =
   AuthenticatedAlunoCadernoSubjectIdRouteImport.update({
@@ -85,6 +96,7 @@ const AuthenticatedAlunoCadernoSubjectIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/aluno': typeof AuthenticatedAlunoRouteWithChildren
   '/professor': typeof AuthenticatedProfessorRoute
   '/aluno/disciplinas': typeof AuthenticatedAlunoDisciplinasRoute
@@ -98,6 +110,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/professor': typeof AuthenticatedProfessorRoute
   '/aluno/disciplinas': typeof AuthenticatedAlunoDisciplinasRoute
   '/aluno/painel': typeof AuthenticatedAlunoPainelRoute
@@ -111,6 +124,8 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
   '/_authenticated/aluno': typeof AuthenticatedAlunoRouteWithChildren
   '/_authenticated/professor': typeof AuthenticatedProfessorRoute
   '/_authenticated/aluno/disciplinas': typeof AuthenticatedAlunoDisciplinasRoute
@@ -126,6 +141,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
     | '/aluno'
     | '/professor'
     | '/aluno/disciplinas'
@@ -139,6 +155,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/auth'
     | '/professor'
     | '/aluno/disciplinas'
     | '/aluno/painel'
@@ -151,6 +168,8 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/_authenticated'
+    | '/auth'
     | '/_authenticated/aluno'
     | '/_authenticated/professor'
     | '/_authenticated/aluno/disciplinas'
@@ -165,9 +184,8 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AuthenticatedAlunoRoute: typeof AuthenticatedAlunoRouteWithChildren
-  AuthenticatedProfessorRoute: typeof AuthenticatedProfessorRoute
-  AuthenticatedProfessorPedidosRoute: typeof AuthenticatedProfessorPedidosRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -179,19 +197,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/aluno': {
       id: '/_authenticated/aluno'
       path: '/aluno'
       fullPath: '/aluno'
       preLoaderRoute: typeof AuthenticatedAlunoRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/professor': {
       id: '/_authenticated/professor'
       path: '/professor'
       fullPath: '/professor'
       preLoaderRoute: typeof AuthenticatedProfessorRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/aluno/': {
       id: '/_authenticated/aluno/'
@@ -240,7 +272,7 @@ declare module '@tanstack/react-router' {
       path: '/professor/pedidos'
       fullPath: '/professor/pedidos'
       preLoaderRoute: typeof AuthenticatedProfessorPedidosRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/aluno/caderno/$subjectId': {
       id: '/_authenticated/aluno/caderno/$subjectId'
@@ -276,11 +308,25 @@ const AuthenticatedAlunoRouteChildren: AuthenticatedAlunoRouteChildren = {
 const AuthenticatedAlunoRouteWithChildren =
   AuthenticatedAlunoRoute._addFileChildren(AuthenticatedAlunoRouteChildren)
 
-const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAlunoRoute: typeof AuthenticatedAlunoRouteWithChildren
+  AuthenticatedProfessorRoute: typeof AuthenticatedProfessorRoute
+  AuthenticatedProfessorPedidosRoute: typeof AuthenticatedProfessorPedidosRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAlunoRoute: AuthenticatedAlunoRouteWithChildren,
   AuthenticatedProfessorRoute: AuthenticatedProfessorRoute,
   AuthenticatedProfessorPedidosRoute: AuthenticatedProfessorPedidosRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
+const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
