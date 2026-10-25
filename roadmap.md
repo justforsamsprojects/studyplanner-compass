@@ -1,0 +1,2 @@
+- [ ] Login e sincronização na nuvem
+- [ ] Corrigir erro de build
