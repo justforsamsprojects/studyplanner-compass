@@ -18,7 +18,7 @@ import { loadSampleData, uid, useBlocks } from "@/lib/storage";
 import { BLOCK_LABELS, DAY_NAMES, DAY_SHORT, type BlockType, type BusyBlock } from "@/lib/types";
 import { freeHoursCount } from "@/lib/planner";
 
-export const Route = createFileRoute("/aluno/rotina")({
+export const Route = createFileRoute("/_authenticated/aluno/rotina")({
   head: () => ({
     meta: [
       { title: "Minha rotina — StudyPlanner" },

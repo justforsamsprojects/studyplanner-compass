@@ -9,7 +9,7 @@ import { useBlocks, useSessions, useSubjects } from "@/lib/storage";
 import { DAY_NAMES } from "@/lib/types";
 import { formatDate, generatePlan, isPastSession, toISO, weekDates } from "@/lib/planner";
 
-export const Route = createFileRoute("/aluno/plano")({
+export const Route = createFileRoute("/_authenticated/aluno/plano")({
   head: () => ({
     meta: [
       { title: "Plano semanal — StudyPlanner" },

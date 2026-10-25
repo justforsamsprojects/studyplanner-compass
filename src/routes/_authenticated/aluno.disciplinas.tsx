@@ -14,13 +14,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { readTeacherSubjects, uid, useHelpRequests, useSessions, useSubjects } from "@/lib/storage";
+import { findTeacherSubjectByCode } from "@/lib/cloud-sync";
+import { uid, useHelpRequests, useSessions, useSubjects } from "@/lib/storage";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { DIFFICULTY_LABELS, type Subject } from "@/lib/types";
 import { daysUntil, formatDate, neededHours, studiedHours, subjectAlerts } from "@/lib/planner";
 
-export const Route = createFileRoute("/aluno/disciplinas")({
+export const Route = createFileRoute("/_authenticated/aluno/disciplinas")({
   head: () => ({
     meta: [
       { title: "Disciplinas — StudyPlanner" },
@@ -62,10 +63,10 @@ function DisciplinasPage() {
     toast.success("Disciplina cadastrada.");
   };
 
-  const importByCode = () => {
+  const importByCode = async () => {
     const clean = code.trim().toUpperCase();
     if (clean.length !== 6) { toast.error("O código tem 6 caracteres."); return; }
-    const found = readTeacherSubjects().find((t) => t.code === clean);
+    const found = await findTeacherSubjectByCode(clean);
     if (!found) { toast.error("Código não encontrado."); return; }
     if (subjects.some((s) => s.code === clean)) { toast.error("Disciplina já adicionada."); return; }
     const nextExam =

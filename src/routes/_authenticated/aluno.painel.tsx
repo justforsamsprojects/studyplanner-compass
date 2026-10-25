@@ -21,7 +21,7 @@ import { useBlocks, useSessions, useSubjects } from "@/lib/storage";
 import { DAY_SHORT } from "@/lib/types";
 import { freeHoursCount, neededHours, requiredHours, studiedHours, subjectAlerts, toISO, weekDates } from "@/lib/planner";
 
-export const Route = createFileRoute("/aluno/painel")({
+export const Route = createFileRoute("/_authenticated/aluno/painel")({
   head: () => ({
     meta: [
       { title: "Painel — StudyPlanner" },

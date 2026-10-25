@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "
 import { uid, useNotebookDocs, useSubjects } from "@/lib/storage";
 import { cn } from "@/lib/utils";
 
-export const Route = createFileRoute("/aluno/caderno/$subjectId")({
+export const Route = createFileRoute("/_authenticated/aluno/caderno/$subjectId")({
   validateSearch: (s: Record<string, unknown>): { doc?: string } =>
     typeof s["doc"] === "string" ? { doc: s["doc"] } : {},
   head: () => ({
