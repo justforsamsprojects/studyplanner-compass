@@ -27,7 +27,7 @@ export const Route = createFileRoute("/auth")({
 function AuthPage() {
   const search = Route.useSearch();
   const navigate = useNavigate();
-  const [mode, setMode] = useState<"entrar" | "criar">(search.role ? "criar" : "entrar");
+  const [mode, setMode] = useState<"entrar" | "criar" | "recuperar">(search.role ? "criar" : "entrar");
   const [role, setRole] = useState<"aluno" | "professor">(search.role ?? "aluno");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -59,6 +59,21 @@ function AuthPage() {
     }
   };
 
+  const recover = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setBusy(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) { toast.error(error.message); return; }
+      toast.success("Se esse e-mail estiver cadastrado, você receberá um link para criar uma nova senha.");
+      setMode("entrar");
+    } finally {
+      setBusy(false);
+    }
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <Card className="w-full max-w-md">
@@ -69,8 +84,10 @@ function AuthPage() {
             </span>
             <span className="font-display font-bold text-foreground">StudyPlanner</span>
           </div>
-          <h1 className="text-2xl font-bold text-foreground">{mode === "entrar" ? "Entrar" : "Criar conta"}</h1>
-          <form onSubmit={submit} className="space-y-4">
+          <h1 className="text-2xl font-bold text-foreground">
+            {mode === "entrar" ? "Entrar" : mode === "criar" ? "Criar conta" : "Recuperar senha"}
+          </h1>
+          <form onSubmit={mode === "recuperar" ? recover : submit} className="space-y-4">
             {mode === "criar" ? (
               <>
                 <div className="space-y-1.5">
@@ -90,19 +107,38 @@ function AuthPage() {
               <Label htmlFor="email">E-mail</Label>
               <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
             </div>
-            <div className="space-y-1.5">
-              <Label htmlFor="password">Senha</Label>
-              <Input id="password" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
-            </div>
+            {mode === "recuperar" ? (
+              <p className="text-sm text-muted-foreground">
+                Enviaremos um link para o seu e-mail. Com ele, você define uma nova senha.
+              </p>
+            ) : (
+              <div className="space-y-1.5">
+                <Label htmlFor="password">Senha</Label>
+                <Input id="password" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
+                {mode === "entrar" ? (
+                  <button
+                    type="button"
+                    className="text-xs text-primary hover:underline"
+                    onClick={() => setMode("recuperar")}
+                  >
+                    Esqueci minha senha
+                  </button>
+                ) : null}
+              </div>
+            )}
             <Button type="submit" className="w-full" disabled={busy}>
-              {mode === "entrar" ? "Entrar" : "Criar conta"}
+              {mode === "entrar" ? "Entrar" : mode === "criar" ? "Criar conta" : "Enviar link de recuperação"}
             </Button>
           </form>
           <button
             className="w-full text-center text-sm text-primary hover:underline"
             onClick={() => setMode(mode === "entrar" ? "criar" : "entrar")}
           >
-            {mode === "entrar" ? "Não tem conta? Criar conta" : "Já tem conta? Entrar"}
+            {mode === "recuperar"
+              ? "Lembrei minha senha — voltar"
+              : mode === "entrar"
+                ? "Não tem conta? Criar conta"
+                : "Já tem conta? Entrar"}
           </button>
         </CardContent>
       </Card>
