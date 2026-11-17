@@ -118,4 +118,4 @@ Aplicação publicada e funcional, com melhorias e validações em andamento.
 
 ---
 
-Desenvolvido como projeto acadêmico, explorando a aplicação de tecnologia e inteligência artificial na criação de soluções para desafios cotidianos.
+Desenvolvido como projeto acadêmico da disciplina Engenharia de Software II, explorando a aplicação de tecnologia e inteligência artificial na criação de soluções para desafios cotidianos.
